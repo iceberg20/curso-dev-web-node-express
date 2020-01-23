@@ -35,11 +35,8 @@ app.get('/', function (req, res){
   res.send(JSON.stringify(dados));
 });
 
-app.get('/db',  async function(req,res){
-	var result = await start();	
-	await sleep(3000);
-    res.send(result);
-    console.log(result);
+app.get('/db',  async function(req,res){	 
+    res.send(await start());    
 });
 
 function sleep(ms) {
@@ -48,24 +45,22 @@ function sleep(ms) {
   });
 }   
 
-
 async function start(){
 	await connect();
-	var out;
+	var out = "";
 	client.query('SELECT * from public."Aluno"', (err, res) => {
 	  if (err) {
 	    console.log(err.stack)
 	    out = "erro";
 	  } else {
-	    console.log(res.rows[0])
-	    out = res.rows[0];   
+	    console.log(res.rows[1])
+	    out = res.rows[1].nome;  
+	    console.log(out); 
 	  }
 	});
+	await sleep(2000);
 	return out;
 }
-
-
-
 
 async function connect(){
 	try{
